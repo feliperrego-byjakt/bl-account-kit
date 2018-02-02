@@ -1,0 +1,16 @@
+{
+    "name": "account-kit-example",
+    "version": "0.0.1",
+    "dependencies": {
+        "body-parser": "^1.15.0",
+        "express": "3.x",
+        "guid": "0.0.12",
+        "mustache": "^2.2.1",
+        "nodemon": "^1.14.12",
+        "querystring": "^0.2.0",
+        "request": "^2.69.0"
+    },
+    "scripts": {
+        "start": "nodemon server.js"
+    }
+}

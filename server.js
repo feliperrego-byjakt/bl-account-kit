@@ -49,8 +49,7 @@ app.get('/validation', function (request, response) {
     response.send(html);
 });
 
-var port = 8111;
-app.listen(port, function () {
-    console.log('Example app listening on port: ' + port);
+app.listen(process.env.PORT || 8111, function () {
+    console.log('Example app listening on port: ' + this.address().port);
   });
 

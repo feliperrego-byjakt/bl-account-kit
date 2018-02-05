@@ -34,6 +34,21 @@ app.get('/', function (request, response) {
     response.send(html);
 });
 
+app.get('/validation', function (request, response) {
+
+    function render_html() {
+        return fs.readFileSync('validation.html').toString();
+    }
+
+    var html = Mustache.to_html(render_html(), {
+        appId: app_id,
+        csrf: csrf_guid,
+        version: account_kit_api_version,
+    });
+
+    response.send(html);
+});
+
 var port = 8111;
 app.listen(port, function () {
     console.log('Example app listening on port: ' + port);

@@ -62,7 +62,7 @@ function submitForm() {
     
         $.ajax({
             method: 'POST',
-            url: 'http://localhost:8000/api/auth/registration/',
+            url: 'https://bikelane-api.herokuapp.com/api/auth/registration/',
             data: data,
             success: function(response) {
                 setTimeout(function() {
@@ -91,7 +91,7 @@ function submitValidationForm() {
 
     $.ajax({
         method: 'POST',
-        url: 'http://localhost:8000/api/auth/validation/',
+        url: 'https://bikelane-api.herokuapp.com/api/auth/validation/',
         beforeSend: function(xhrObj){
             xhrObj.setRequestHeader("Authorization", "Token " + validationData.token);
         },

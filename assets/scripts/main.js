@@ -1,18 +1,24 @@
+var API_URL;
+
+if (window.location.hostname == "localhost") {
+    API_URL = 'http://localhost:8000';
+} else {
+    API_URL = 'https://bikelane-api.herokuapp.com';
+}
+
 // login callback
 function loginCallback(response) {
     if (response.status === "PARTIALLY_AUTHENTICATED") {
         document.getElementById("code").value = response.code;
-        document.getElementById("csrf").value = response.state;
-
         showOverlay('Validatind user...');
 
-        setTimeout(function(){
+        setTimeout(function () {
             submitValidationForm();
         }, 1000);
     }
     else if (response.status === "NOT_AUTHENTICATED") {
         // handle not authenticated
-        hideOverlay();        
+        hideOverlay();
         alert('An error occured, handle this. Status: ' + response.status);
     }
     else if (response.status === "BAD_PARAMS") {
@@ -27,7 +33,7 @@ function smsLogin(phoneNumber) {
     showOverlay('Please, go to validation screen!');
     AccountKit.login(
         'PHONE',
-        {countryCode: '+55', phoneNumber: phoneNumber}, // will use default values if not specified
+        { countryCode: '+55', phoneNumber: phoneNumber }, // will use default values if not specified
         loginCallback
     );
 }
@@ -37,7 +43,7 @@ function emailLogin(email) {
     showOverlay('Please, go to validation screen!');
     AccountKit.login(
         'EMAIL',
-        {email: email},
+        { email: email },
         loginCallback
     );
 }
@@ -53,56 +59,77 @@ function hideOverlay() {
 
 function submitForm() {
 
-        showOverlay('Please wait...');
+    hideErrors();    
 
-        var data = $('#signup-form').serializeArray().reduce(function(obj, item) {
-            obj[item.name] = item.value;
-            return obj;
-        }, {});
-    
-        $.ajax({
-            method: 'POST',
-            url: 'https://bikelane-api.herokuapp.com/api/auth/registration/',
-            data: data,
-            success: function(response) {
-                setTimeout(function() {
-                    $('#signup-form').hide();
-        
-                    document.getElementById("token").value = response.token;
-        
-                    $('#page-title').text('Registration completed!');
-                    $('#page-text').empty().append('<p>Now choose the method below to validate your account.</p>');
-                    $('#page-text').append('<p><button onClick="smsLogin(\'' + response.user.phone_number + '\')" class="btn btn-lg btn-primary btn-block" type="button">Via SMS</button></p><p>or</p>');
-                    $('#page-text').append('<p><button onClick="emailLogin(\'' + response.user.email + '\')" class="btn btn-lg btn-primary btn-block" type="button">Via Email</button></p>');
-        
-                    hideOverlay();
-                }, 1000);
-            }
-        });
-    
-}
+    showOverlay('Please wait...');
 
-function submitValidationForm() {
-
-    var validationData = $('#validation-form').serializeArray().reduce(function(obj, item) {
+    var data = $('#signup-form').serializeArray().reduce(function (obj, item) {
         obj[item.name] = item.value;
         return obj;
     }, {});
 
     $.ajax({
         method: 'POST',
-        url: 'https://bikelane-api.herokuapp.com/api/auth/validation/',
-        beforeSend: function(xhrObj){
-            xhrObj.setRequestHeader("Authorization", "Token " + validationData.token);
-        },
-        data: validationData,
-        dataType: "json",
-        success: function(response) {
+        url: API_URL + '/api/auth/registration/',
+        data: data
+    })
+        .done(function (response) {
+            setTimeout(function () {
+                $('#signup-form').hide();
 
+                document.getElementById("token").value = response.token;
+
+                $('#page-title').text('Registration completed!');
+                $('#page-text').empty().append('<p>Now choose the method below to validate your account.</p>');
+                $('#page-text').append('<p><button onClick="smsLogin(\'' + response.user.phone_number + '\')" class="btn btn-lg btn-primary btn-block" type="button">Via SMS</button></p><p>or</p>');
+                $('#page-text').append('<p><button onClick="emailLogin(\'' + response.user.email + '\')" class="btn btn-lg btn-primary btn-block" type="button">Via Email</button></p>');
+
+                hideOverlay();
+            }, 1000);
+        })
+        .fail(function (err) {
+            showErrors(err.responseJSON.errors);
+        });
+
+}
+
+function submitValidationForm() {
+
+    hideErrors();
+
+    var validationData = $('#validation-form').serializeArray().reduce(function (obj, item) {
+        obj[item.name] = item.value;
+        return obj;
+    }, {});
+
+    $.ajax({
+        method: 'POST',
+        url: API_URL + '/api/auth/validation/',
+        data: validationData,
+        dataType: "json"
+    })
+        .done(function (response) {
             $('#page-title').text(response.message);
             $('#page-text').empty().append('<p>You are now ready to log in on our platform. Enjoy it.</p>');
 
             hideOverlay();
-        }
-    });
+        })
+        .fail(function (err) {
+            showErrors(err.responseJSON.errors);
+        })
 }
+
+function hideErrors() {
+    $('.errors').empty();
+}
+
+function showErrors(errors) {
+    var $errors = $('.errors');
+
+    $errors.empty();
+    errors.map(function (error) {
+        $errors.append('<div class="alert alert-danger" role="alert">' + error.message + '</div>');
+    });
+
+    hideOverlay();
+};

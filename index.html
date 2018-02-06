@@ -13,7 +13,7 @@
     <link href="/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="/css/floating-labels.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
     <script src="/scripts/jquery-3.3.1.min.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="https://sdk.accountkit.com/en_US/sdk.js"></script>
@@ -48,33 +48,35 @@
             </div>
         </div>
 
+        <div class="errors col-md-6 mb-3"></div>
+
         <form class="form-signin" id="signup-form">
                 <div class="row">
                     <div class="form-label-group col-md-6 mb-3">
-                        <input value="Felipe" name="first_name" type="text" id="first_name" class="form-control" placeholder="First name" required
+                        <input name="first_name" type="text" id="first_name" class="form-control" placeholder="First name" required
                             autofocus>
                         <label for="first_name">First name</label>
                     </div>
         
                     <div class="form-label-group col-md-6 mb-3">
-                        <input value="Rego" name="last_name" type="text" id="last_name" class="form-control" placeholder="Last name" required>
+                        <input name="last_name" type="text" id="last_name" class="form-control" placeholder="Last name" required>
                         <label for="last_name">Last name</label>
                     </div>
                 </div>
         
                 <div class="form-label-group">
-                    <input value="85996561526" name="phone_number" type="text" id="phone_number" class="form-control" placeholder="Phone number"
+                    <input name="phone_number" type="text" id="phone_number" class="form-control" placeholder="Phone number"
                         required>
                     <label for="phone_number">Phone number</label>
                 </div>
         
                 <div class="form-label-group">
-                    <input value="felipe.rego@byjakt.com" name="email" type="email" id="email" class="form-control" placeholder="Email address">
+                    <input name="email" type="email" id="email" class="form-control" placeholder="Email address">
                     <label for="email">Email address</label>
                 </div>
         
                 <div class="form-label-group">
-                    <input value="Fr_12345" name="password" type="password" id="password" class="form-control" placeholder="Password" required>
+                    <input name="password" type="password" id="password" class="form-control" placeholder="Password" required>
                     <label for="password">Password</label>
                 </div>
         
@@ -82,7 +84,7 @@
                     <div class="form-label-group col-md-12 mb-3">
                         <select name="user_type" class="custom-select d-block w-100 form-control" id="country" required>
                             <option value="">I am an:</option>
-                            <option selected value="employer">Employer</option>
+                            <option value="employer">Employer</option>
                             <option value="applicant">Employee</option>
                         </select>
                     </div>
@@ -95,7 +97,6 @@
             </form>
 
             <form id="validation-form">
-                <input id="csrf" type="hidden" name="csrf" />
                 <input id="code" type="hidden" name="code" />
                 <input id="token" type="hidden" name="token" />
             </form>
@@ -108,6 +109,7 @@
             <h1></h1>
         </div>
     </div>
+
 </body>
 
 </html>

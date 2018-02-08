@@ -8,14 +8,13 @@ const Request = require('request');
 const Querystring = require('querystring');
 const app = express();
 
+require('dotenv').config();
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.static('assets'));
 
 var csrf_guid = Guid.raw();
-const account_kit_api_version = 'v1.0';
-const app_id = '1834269493537357';
-const app_secret = 'f18497362265a2f033f5074f0a7804ae';
 const me_endpoint_base_url = 'https://graph.accountkit.com/v1.0/me';
 const token_exchange_base_url = 'https://graph.accountkit.com/v1.0/access_token';
 
@@ -26,9 +25,9 @@ app.get('/', function (request, response) {
     }
 
     var html = Mustache.to_html(render_html(), {
-        appId: app_id,
+        appId: process.env.ACCOUNT_KIT_APP_ID,
         csrf: csrf_guid,
-        version: account_kit_api_version,
+        version: process.env.ACCOUNT_KIT_APP_VERSION,
     });
 
     response.send(html);

@@ -3,6 +3,7 @@
     "version": "0.0.1",
     "dependencies": {
         "body-parser": "^1.15.0",
+        "dotenv": "^5.0.0",
         "express": "3.x",
         "guid": "0.0.12",
         "mustache": "^2.2.1",

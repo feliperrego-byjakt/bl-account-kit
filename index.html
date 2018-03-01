@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Bikelane - Account kit example</title>
+    <title>Bikelane - Account kit Sign up</title>
 
     <!-- Bootstrap core CSS -->
     <link href="/css/bootstrap.min.css" rel="stylesheet">
@@ -40,7 +40,7 @@
     <div class="container">
 
         <div class="text-center col-md-6 mb-3 page-info">
-            <h1 class="h3 mb-3 font-weight-normal" id="page-title">Account kit example</h1>
+            <h1 class="h3 mb-3 font-weight-normal" id="page-title">Account kit Sign Up</h1>
             <div id="page-text">
                 <p>This example call the sing up endpoint, then use the
                     <a href="https://developers.facebook.com/docs/accountkit" target="_blank">Account Kit</a> to validate the user.
@@ -51,33 +51,29 @@
         <div class="errors col-md-6 mb-3"></div>
 
         <form class="form-signin" id="signup-form">
-                <div class="row">
-                    <div class="form-label-group col-md-6 mb-3">
-                        <input name="first_name" type="text" id="first_name" class="form-control" placeholder="First name" required
-                            autofocus>
-                        <label for="first_name">First name</label>
-                    </div>
-        
-                    <div class="form-label-group col-md-6 mb-3">
-                        <input name="last_name" type="text" id="last_name" class="form-control" placeholder="Last name" required>
-                        <label for="last_name">Last name</label>
-                    </div>
-                </div>
-        
-                <div class="form-label-group">
-                    <input name="phone_number" type="text" id="phone_number" class="form-control" placeholder="Phone number"
-                        required>
-                    <label for="phone_number">Phone number</label>
-                </div>
-        
-                <div class="form-label-group">
-                    <input name="email" type="email" id="email" class="form-control" placeholder="Email address">
+
+                <p>
+                    <a class="email-method" href>Use Email Address Instead</a>
+                    <a class="phone-method" href>Use Phone Number Instead</a>
+                </p>
+
+                <div class="form-label-group email-group">
+                    <input value="feliperrego@gmail.com" name="email" type="email" id="email" class="form-control" placeholder="Email address">
                     <label for="email">Email address</label>
                 </div>
-        
-                <div class="form-label-group">
-                    <input name="password" type="password" id="password" class="form-control" placeholder="Password" required>
-                    <label for="password">Password</label>
+
+                <div class="row phone-group">
+                    <div class="form-label-group col-md-4 mb-3">
+                        <input value ="+55" name="country_code" type="text" id="country_code" class="form-control" placeholder="Country"
+                            required>
+                        <label for="country_code">Country</label>
+                    </div>
+            
+                    <div class="form-label-group col-md-8 mb-3">
+                        <input value="85996561526" name="phone_number" type="text" id="phone_number" class="form-control" placeholder="Phone number"
+                            required>
+                        <label for="phone_number">Phone number</label>
+                    </div>
                 </div>
         
                 <div class="row">
@@ -85,20 +81,17 @@
                         <select name="user_type" class="custom-select d-block w-100 form-control" id="country" required>
                             <option value="">I am an:</option>
                             <option value="employer">Employer</option>
-                            <option value="applicant">Employee</option>
+                            <option selected value="applicant">Employee</option>
                         </select>
                     </div>
                 </div>
-        
+                
+                <input id="code" type="hidden" name="account_kit_code" />
                 
         
-                <button onclick="submitForm();" class="btn btn-lg btn-primary btn-block" type="button">Sign up</button>
+                <button onclick="smsLogin();" class="submit-sms btn btn-lg btn-primary btn-block" type="button">Sign up</button>
+                <button onclick="emailLogin();" class="submit-email btn btn-lg btn-primary btn-block" type="button">Sign up</button>
                 <p class="mt-5 mb-3 text-muted text-center">BikeLane Team</p>
-            </form>
-
-            <form id="validation-form">
-                <input id="code" type="hidden" name="code" />
-                <input id="token" type="hidden" name="token" />
             </form>
 
     </div>

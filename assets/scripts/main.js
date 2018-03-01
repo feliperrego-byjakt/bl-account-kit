@@ -6,14 +6,37 @@ if (window.location.hostname == "localhost") {
     API_URL = 'https://bikelane-api.herokuapp.com';
 }
 
+function signupMethod(method) {
+    if (method=='email') {
+        $('.email-group').show();
+        $('.phone-group').hide();
+        $('.email-method').hide();
+        $('.phone-method').show();
+        $('#email').attr('disabled', false);
+        $('#phone_number').attr('disabled', true);
+        $('.submit-email').show();
+        $('.submit-sms').hide();
+    } else {
+        $('.email-group').hide();
+        $('.phone-group').show();
+        $('.email-method').show();
+        $('.phone-method').hide();
+        $('#email').attr('disabled', true);
+        $('#phone_number').attr('disabled', false);
+        $('.submit-email').hide();
+        $('.submit-sms').show();
+    }
+}
+
 // login callback
 function loginCallback(response) {
     if (response.status === "PARTIALLY_AUTHENTICATED") {
         document.getElementById("code").value = response.code;
-        showOverlay('Validatind user...');
+        console.log(response.code);
+        showOverlay('Registering user...');
 
         setTimeout(function () {
-            submitValidationForm();
+            submitForm()
         }, 1000);
     }
     else if (response.status === "NOT_AUTHENTICATED") {
@@ -25,25 +48,30 @@ function loginCallback(response) {
         // handle bad parameters
         hideOverlay();
         alert('An error occured, handle this. Status: ' + response.status);
+    } else {
+        console.log(response.status);
     }
 }
 
 // phone form submission handler
-function smsLogin(phoneNumber) {
+function smsLogin() {
+    var phoneNumber = $('#phone_number').val();
+    var countryCode = $('#country_code').val();
     showOverlay('Please, go to validation screen!');
     AccountKit.login(
         'PHONE',
-        { countryCode: '+55', phoneNumber: phoneNumber }, // will use default values if not specified
+        { countryCode: countryCode, phoneNumber: phoneNumber }, // will use default values if not specified
         loginCallback
     );
 }
 
 // email form submission handler
-function emailLogin(email) {
+function emailLogin() {
+    var email = $('#email').val();
     showOverlay('Please, go to validation screen!');
     AccountKit.login(
         'EMAIL',
-        { email: email },
+        { emailAddress: email },
         loginCallback
     );
 }
@@ -76,13 +104,7 @@ function submitForm() {
         .done(function (response) {
             setTimeout(function () {
                 $('#signup-form').hide();
-
-                document.getElementById("token").value = response.token;
-
                 $('#page-title').text('Registration completed!');
-                $('#page-text').empty().append('<p>Now choose the method below to validate your account.</p>');
-                $('#page-text').append('<p><button onClick="smsLogin(\'' + response.user.phone_number + '\')" class="btn btn-lg btn-primary btn-block" type="button">Via SMS</button></p><p>or</p>');
-                $('#page-text').append('<p><button onClick="emailLogin(\'' + response.user.email + '\')" class="btn btn-lg btn-primary btn-block" type="button">Via Email</button></p>');
 
                 hideOverlay();
             }, 1000);
@@ -91,32 +113,6 @@ function submitForm() {
             showErrors(err.responseJSON.errors);
         });
 
-}
-
-function submitValidationForm() {
-
-    hideErrors();
-
-    var validationData = $('#validation-form').serializeArray().reduce(function (obj, item) {
-        obj[item.name] = item.value;
-        return obj;
-    }, {});
-
-    $.ajax({
-        method: 'POST',
-        url: API_URL + '/api/auth/validation/',
-        data: validationData,
-        dataType: "json"
-    })
-        .done(function (response) {
-            $('#page-title').text(response.message);
-            $('#page-text').empty().append('<p>You are now ready to log in on our platform. Enjoy it.</p>');
-
-            hideOverlay();
-        })
-        .fail(function (err) {
-            showErrors(err.responseJSON.errors);
-        })
 }
 
 function hideErrors() {
@@ -133,3 +129,17 @@ function showErrors(errors) {
 
     hideOverlay();
 };
+
+$(document).ready(function(){
+    signupMethod();
+
+    $('.email-method').click(function(event) {
+        event.preventDefault();
+        signupMethod('email');
+    });
+    
+    $('.phone-method').click(function(event) {
+        event.preventDefault();
+        signupMethod();
+    });
+})

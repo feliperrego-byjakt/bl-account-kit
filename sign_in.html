@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Bikelane - Account kit Sign in</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="/css/style.css" rel="stylesheet">
+    <script src="/scripts/jquery-3.3.1.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://sdk.accountkit.com/en_US/sdk.js"></script>
+    <script src="/scripts/main.js"></script>
+    <script>
+        // initialize Account Kit with CSRF protection
+        AccountKit_OnInteractive = function () {
+            AccountKit.init(
+                {
+                    appId: "{{ appId }}",
+                    state: "{{ csrf }}",
+                    version: "{{ version }}",
+                    debug: true,
+                    fbAppEventsEnabled: true
+                }
+            );
+        };
+    </script>
+    
+</head>
+
+<body style="background-color: #f5f5f5">
+
+    <div class="container">
+
+        <div class="text-center col-md-6 mb-3 page-info">
+            <h1 class="h3 mb-3 font-weight-normal" id="page-title">Account kit Sign In</h1>
+        </div>
+
+        <div class="errors col-md-6 mb-3"></div>
+
+        <form class="form-signin" id="signup-form">
+
+                <div class="form-label-group email-group">
+                    <input value="feliperrego@gmail.com" name="email" type="email" id="email" class="form-control" placeholder="Email address">
+                    <label for="email">Email address</label>
+                </div>
+
+                <div class="row phone-group">
+                    <div class="form-label-group col-md-4 mb-3">
+                        <input value ="+55" name="country_code" type="text" id="country_code" class="form-control" placeholder="Country"
+                            required>
+                        <label for="country_code">Country</label>
+                    </div>
+            
+                    <div class="form-label-group col-md-8 mb-3">
+                        <input value="85996561526" name="phone_number" type="text" id="phone_number" class="form-control" placeholder="Phone number"
+                            required>
+                        <label for="phone_number">Phone number</label>
+                    </div>
+                </div>
+
+                <p>
+                    <a class="email-method" href>Use Email Address Instead</a>
+                    <a class="phone-method" href>Use Phone Number Instead</a>
+                </p>
+                
+                <input id="code" type="hidden" name="account_kit_code" />
+                
+                <button onclick="smsLogin('login');" class="submit-sms btn btn-lg btn-primary btn-block" type="button">Sign in</button>
+                <button onclick="emailLogin('login');" class="submit-email btn btn-lg btn-primary btn-block" type="button">Sign in</button>
+                <p class="mt-5 mb-3 text-muted text-center">BikeLane Team</p>
+            </form>
+
+    </div>
+    
+    <div class="block">
+        <div class="block-overlay"></div>
+        <div class="block-msg">
+            <h1></h1>
+        </div>
+    </div>
+
+</body>
+
+</html>

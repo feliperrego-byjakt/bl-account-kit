@@ -52,11 +52,6 @@
 
         <form class="form-signin" id="signup-form">
 
-                <p>
-                    <a class="email-method" href>Use Email Address Instead</a>
-                    <a class="phone-method" href>Use Phone Number Instead</a>
-                </p>
-
                 <div class="form-label-group email-group">
                     <input value="feliperrego@gmail.com" name="email" type="email" id="email" class="form-control" placeholder="Email address">
                     <label for="email">Email address</label>
@@ -64,9 +59,9 @@
 
                 <div class="row phone-group">
                     <div class="form-label-group col-md-4 mb-3">
-                        <input value ="+55" name="country_code" type="text" id="country_code" class="form-control" placeholder="Country"
+                        <input value ="+55" name="country_code" type="text" id="country_code" class="form-control" placeholder="Country code"
                             required>
-                        <label for="country_code">Country</label>
+                        <label for="country_code">Country code</label>
                     </div>
             
                     <div class="form-label-group col-md-8 mb-3">
@@ -85,6 +80,11 @@
                         </select>
                     </div>
                 </div>
+
+                <p>
+                    <a class="email-method" href>Use Email Address Instead</a>
+                    <a class="phone-method" href>Use Phone Number Instead</a>
+                </p>
                 
                 <input id="code" type="hidden" name="account_kit_code" />
                 

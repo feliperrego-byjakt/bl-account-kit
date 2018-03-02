@@ -29,50 +29,55 @@ function signupMethod(method) {
 }
 
 // login callback
-function loginCallback(response) {
-    if (response.status === "PARTIALLY_AUTHENTICATED") {
-        document.getElementById("code").value = response.code;
-        console.log(response.code);
-        showOverlay('Registering user...');
+function loginCallback(method) {
 
-        setTimeout(function () {
-            submitForm()
-        }, 1000);
-    }
-    else if (response.status === "NOT_AUTHENTICATED") {
-        // handle not authenticated
-        hideOverlay();
-        alert('An error occured, handle this. Status: ' + response.status);
-    }
-    else if (response.status === "BAD_PARAMS") {
-        // handle bad parameters
-        hideOverlay();
-        alert('An error occured, handle this. Status: ' + response.status);
-    } else {
-        console.log(response.status);
+    var callback = method=='login' ? submitLoginForm: submitSignUpForm;
+
+    return function(response) {
+        if (response.status === "PARTIALLY_AUTHENTICATED") {
+            document.getElementById("code").value = response.code;
+            console.log(response.code);
+            showOverlay('Registering user...');
+    
+            setTimeout(function () {
+                callback()
+            }, 1000);
+        }
+        else if (response.status === "NOT_AUTHENTICATED") {
+            // handle not authenticated
+            hideOverlay();
+            alert('An error occured, handle this. Status: ' + response.status);
+        }
+        else if (response.status === "BAD_PARAMS") {
+            // handle bad parameters
+            hideOverlay();
+            alert('An error occured, handle this. Status: ' + response.status);
+        } else {
+            console.log(response.status);
+        }
     }
 }
 
 // phone form submission handler
-function smsLogin() {
+function smsLogin(method) {
     var phoneNumber = $('#phone_number').val();
     var countryCode = $('#country_code').val();
     showOverlay('Please, go to validation screen!');
     AccountKit.login(
         'PHONE',
         { countryCode: countryCode, phoneNumber: phoneNumber }, // will use default values if not specified
-        loginCallback
+        loginCallback(method)
     );
 }
 
 // email form submission handler
-function emailLogin() {
+function emailLogin(method) {
     var email = $('#email').val();
     showOverlay('Please, go to validation screen!');
     AccountKit.login(
         'EMAIL',
         { emailAddress: email },
-        loginCallback
+        loginCallback(method)
     );
 }
 
@@ -85,7 +90,7 @@ function hideOverlay() {
     $('.block').hide();
 }
 
-function submitForm() {
+function submitLoginForm() {
 
     hideErrors();    
 
@@ -95,6 +100,46 @@ function submitForm() {
         obj[item.name] = item.value;
         return obj;
     }, {});
+
+    if (data.phone_number) {
+        data.phone_number = data.country_code + data.phone_number;
+        delete data.country_code;
+    }
+
+    $.ajax({
+        method: 'POST',
+        url: API_URL + '/api/auth/login/',
+        data: data
+    })
+        .done(function (response) {
+            setTimeout(function () {
+                $('#signup-form').hide();
+                $('#page-title').text('You\'re logged In!');
+
+                hideOverlay();
+            }, 1000);
+        })
+        .fail(function (err) {
+            showErrors(err.responseJSON.errors);
+        });
+
+}
+
+function submitSignUpForm() {
+
+    hideErrors();    
+
+    showOverlay('Please wait...');
+
+    var data = $('#signup-form').serializeArray().reduce(function (obj, item) {
+        obj[item.name] = item.value;
+        return obj;
+    }, {});
+
+    if (data.phone_number) {
+        data.phone_number = data.country_code + data.phone_number;
+        delete data.country_code;
+    }
 
     $.ajax({
         method: 'POST',
